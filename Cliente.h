@@ -9,15 +9,17 @@ using namespace std;
 
 class Cliente :
     public Persona
-{
+{	
 		// atributos
-	private: string nit;
+	private: 
+		string nit;
 		   // constructor
 	public:
 		Cliente() {
 		}
 		Cliente(string nom, string ape, string dir, int tel, string fn, string n) : Persona(nom, ape, dir, tel, fn) {
 			nit = n;
+			
 		}
 		//metodos
 		//set (modificar)
@@ -60,6 +62,38 @@ class Cliente :
 
 			cn.cerrar_conexion();
 		}
+
+		int actualizar(int idcliente) {
+			db_conexion cn = db_conexion();
+			int q_estado;
+			string t = to_string(telefono);
+			string idcl = to_string(idcliente);
+
+			cn.abrir_conexion();
+
+			if (cn.getConectar()) {
+				string t = to_string(telefono);
+				string update = "UPDATE clientes SET nit = '" + nit + "', nombres = '" + nombres + "', apellidos = '" + apellidos + "', direccion = '" + direccion + "', telefono = " + t + ", fecha_nacimiento = '" + fecha_nacimiento + "' WHERE idcliente = " + idcl + "; ";
+				
+				const char* i = update.c_str();
+				q_estado = mysql_query(cn.getConectar(), i);
+
+				if (!q_estado) {
+					cout << "Actualizacion exitosa..." << endl;
+				}
+				else {
+					cout << "Error al actualizar..." << endl;
+					cout << update << endl << mysql_error(cn.getConectar()) << endl;
+				}
+			}
+			else {
+				cout << "Conexion fallida..." << endl;
+			}
+
+			cn.cerrar_conexion();
+			return idcliente;
+		}
+
 		void leer() {
 			db_conexion cn = db_conexion();
 			int q_estado;
@@ -87,6 +121,38 @@ class Cliente :
 				cout << "Conexion fallida..." << endl;
 			}
 			cn.cerrar_conexion();
+		}
+
+		void eliminar() {
+			db_conexion cn = db_conexion();
+			int q_estado;
+
+			cn.abrir_conexion();
+
+			string idcliente;
+			cout << "Ingrese id que desea eliminar: ";
+			cin >> idcliente;
+
+			if (cn.getConectar()) {
+				string eliminar = "DELETE FROM clientes WHERE idcliente = '" + idcliente + "';";
+				
+				const char* i = eliminar.c_str();
+				q_estado = mysql_query(cn.getConectar(), i);
+
+				if (!q_estado) {
+					cout << "Eliminacion exitosa..." << endl;
+					return;
+				}
+				else {
+					cout << "Error al eliminar..." << endl;
+					cout << eliminar << endl << mysql_error(cn.getConectar()) << endl;
+				}
+
+			}
+			else {
+				cout << "Conexion fallida..." << endl;
+			}
+
 		}
 };
 
