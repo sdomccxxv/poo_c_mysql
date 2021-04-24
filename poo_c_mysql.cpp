@@ -12,10 +12,20 @@ void eliminar();
 
 int main()
 {
-    //crear();
-    update();
-    //eliminar();
-    leer();
+    int menu;
+    cout << "Insertar - 1\nModificar - 2\nEliminar - 3\nMostrar - 4\nIngrese lo que desea realizar: ";
+    cin >> menu;
+    cin.ignore();
+
+    switch (menu)
+    {
+    case 1: crear(); break;
+    case 2: update(); break;
+    case 3: eliminar(); break;
+    case 4: leer(); break;
+    default:
+        break;
+    }
 
     system("pause");
     return 0;
@@ -47,6 +57,7 @@ void crear() {
     Cliente c = Cliente(nombres, apellidos, direccion, telefono, fecha_nac, nit);
 
     c.crear();
+    leer();
     
 }
 
@@ -91,6 +102,7 @@ void update() {
     Cliente c = Cliente(nombres, apellidos, direccion, telefono, fecha_nac, nit);
 
     c.actualizar(idcliente);
+    leer();
 }
 
 void eliminar() {
