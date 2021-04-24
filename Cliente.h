@@ -2,6 +2,7 @@
 #include "Persona.h"
 #include <iostream>
 #include <mysql.h>
+#include <string>
 #include "db_conexion.h"
 
 using namespace std;
@@ -32,6 +33,33 @@ class Cliente :
 		string getDireccion() { return direccion; }
 		int getTelefono() { return telefono; }
 
+		void crear() {
+			db_conexion cn = db_conexion();
+			int q_estado;
+
+			cn.abrir_conexion();
+
+			if (cn.getConectar()) {
+				string t = to_string(telefono);
+				string insert = "INSERT INTO clientes(nit,nombres,apellidos,direccion,telefono,fecha_nacimiento) VALUES ('" + nit + "', '" + nombres + "', '" + apellidos + "', '" + direccion + "', '" + t + "', '" + fecha_nacimiento + "')";
+
+				const char* i = insert.c_str();
+				q_estado = mysql_query(cn.getConectar(), i);
+
+				if (!q_estado) {
+					cout << "Ingreso exitoso..." << endl;
+				}
+				else {
+					cout << "Error al ingresar..." << endl;
+					cout << insert << endl << mysql_error(cn.getConectar()) << endl;
+				}
+			}
+			else {
+				cout << "Conexion fallida..." << endl;
+			}
+
+			cn.cerrar_conexion();
+		}
 		void leer() {
 			db_conexion cn = db_conexion();
 			int q_estado;
